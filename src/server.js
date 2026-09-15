@@ -1,3 +1,20 @@
+const express = require('express');
+const cors = require('cors'); // CORS import karein
+const app = express();
+
+// CORS Middleware enable karein (Har request allow karne ke liye)
+app.use(cors()); 
+app.use(express.json()); // JSON data receive karne ke liye zaroori hai
+
+// Aapka Route jahan Frontend se data aayega
+app.post('/api/save-onboarding', (req, res) => {
+    console.log("Data received from frontend:", req.body);
+    
+    // Yahan aap apna data Database mein save karne ka code likhenge
+    
+    res.json({ success: true, message: "Data received successfully!" });
+});
+
 // src/server.js
 require('dotenv').config();
 const express = require('express');
