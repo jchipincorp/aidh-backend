@@ -1,62 +1,32 @@
 const express = require('express');
-const cors = require('cors'); // CORS import karein
+const cors = require('cors');
+
 const app = express();
+// Render automatically PORT assign karta hai, warna 10000 use karega
+const PORT = process.env.PORT || 10000; 
 
-// CORS Middleware enable karein (Har request allow karne ke liye)
-app.use(cors()); 
-app.use(express.json()); // JSON data receive karne ke liye zaroori hai
+// Middleware (Yeh dono lines bohat zaroori hain)
+app.use(cors()); // Frontend ko API use karne ki ijazat deta hai
+app.use(express.json()); // Frontend se aane wale JSON data ko read karta hai
 
-// Aapka Route jahan Frontend se data aayega
-app.post('/api/save-onboarding', (req, res) => {
-    console.log("Data received from frontend:", req.body);
-    
-    // Yahan aap apna data Database mein save karne ka code likhenge
-    
-    res.json({ success: true, message: "Data received successfully!" });
+// Basic Health Check Route (Check karne ke liye API chal rahi hai ya nahi)
+app.get('/', (req, res) => {
+    res.send('AIDH Backend API is running successfully! CORS is enabled.');
 });
 
-// src/server.js
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
+// Frontend se data receive karne wala route
+app.post('/api/save-onboarding', (req, res) => {
+    console.log("Onboarding Data received from frontend:", req.body);
+    
+    // Future step: Yahan hum MySQL database mein save karne ka code lagayenge
+    
+    res.json({ 
+        success: true, 
+        message: "Onboarding data safely received at backend!" 
+    });
+});
 
-const authRoutes = require('./routes/auth.routes');
-const subscriberRoutes = require('./routes/subscriber.routes');
-const consentRoutes = require('./routes/consent.routes');
-const marketplaceRoutes = require('./routes/marketplace.routes');
-const bookingRoutes = require('./routes/booking.routes');
-const caseRegistryRoutes = require('./routes/caseRegistry.routes');
-const adminRoutes = require('./routes/admin.routes');
-const { errorHandler } = require('./middleware/errorHandler');
-
-function createApp() {
-  const app = express();
-
-  app.use(helmet());
-  app.use(cors({ origin: process.env.ALLOWED_ORIGIN || '*' }));
-  app.use(express.json());
-
-  app.get('/api/health', (req, res) => res.json({ ok: true }));
-
-  app.use('/api/auth', authRoutes);
-  app.use('/api/subscriber', subscriberRoutes);
-  app.use('/api/consent', consentRoutes);
-  app.use('/api/marketplace', marketplaceRoutes);
-  app.use('/api/bookings', bookingRoutes);
-  app.use('/api/case-registry', caseRegistryRoutes);
-  app.use('/api/admin', adminRoutes);
-
-  app.use((req, res) => res.status(404).json({ error: 'Not found' }));
-  app.use(errorHandler);
-
-  return app;
-}
-
-if (require.main === module) {
-  const app = createApp();
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => console.log(`AIDH backend scaffold listening on :${port}`));
-}
-
-module.exports = { createApp };
+// Server Start karna
+app.listen(PORT, () => {
+    console.log(`Server is running live on port ${PORT}`);
+});
