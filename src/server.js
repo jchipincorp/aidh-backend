@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 10000;
 app.use(cors({
   origin: [
     'https://cccx1.com',
-    'https://www.cccx1.com'
+    'https://www.cccx1.com',
+    'http://localhost:3000', // Agar React/Node frontend hai
+    'http://127.0.0.1:5500'  // Agar Live Server VS Code use kar rahe hain
   ],
   credentials: true
 }));
