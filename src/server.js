@@ -29,13 +29,6 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/ping', (req, res) => {
-  res.json({
-    ok: true,
-    message: 'PING WORKS'
-  });
-});
-
 // Health check
 app.get('/api/health', async (req, res) => {
   try {
