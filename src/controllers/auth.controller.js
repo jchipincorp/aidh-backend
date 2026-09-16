@@ -37,7 +37,7 @@ async function register(req, res) {
 
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
   const userResult = await db.query(
-    `INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id, email, role`,
+    `INSERT INTO users (email, password_hash, role, email_verified_at) VALUES ($1, $2, $3, now()) RETURNING id, email, role`,
     [email, passwordHash, role]
   );
   const user = userResult.rows[0];
@@ -51,8 +51,8 @@ async function register(req, res) {
 
   await logAudit(db, { actorUserId: user.id, actorType: role, actionCategory: 'AUTH', action: 'REGISTERED' });
 
-  // TODO production: send a real verification email (see resendVerification below)
-  // rather than auto-issuing a token for an unverified account.
+  // Email verification is intentionally disabled for the current deployment.
+  // New accounts are activated immediately; add a real email-verification flow before enabling it.
   const token = issueToken(user);
   return res.status(201).json({ token, user: { id: user.id, email: user.email, role: user.role } });
 }
